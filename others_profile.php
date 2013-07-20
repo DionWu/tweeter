@@ -57,7 +57,7 @@
 <!-- Search Bar -->
 <div class="search">
 	<form action="others_profile.php" method="get" >
-		Search for someone! <br>
+		Search for people to Follow! <br>
 		<input type="text" name="query">
 		<input type="submit" value="Search!">
 	</form>
@@ -67,7 +67,16 @@
 
 
 <h1> Profile Page of @<?php echo $others_profile_username ?> </h1>
+<?php
+	$det_button_result = det_follow_button($pdo, $_SESSION['user_id'], $others_profile_id);
+	/* call on det_follow_alert() to determine what function to call */
+	$alert_type = det_follow_alert($det_button_result);
 
+	/* Show a Follow/Unfolow button */
+	if ($det_button_result) {
+		echo "<button type='submit' name='follow_button' onclick='" . $alert_type ."(" . $_SESSION['user_id'] . ", " . $others_profile_id . ")'; >" . $det_button_result . "</button>";
+	}
+?>
 
 
 

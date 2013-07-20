@@ -69,14 +69,17 @@
 <!-- SEARCH BAR -->
 <div class="search">
 	<form action="others_profile.php" method="get" >
-		Search for someone! <br>
+		Search for people to Follow! <br>
 		<input type="text" name="query">
 		<input type="submit" value="Search!">
 	</form>
 </div>
 
 
+<!-- Suggest Followers box -->
+<div class="follower_suggestions">
 
+</div>
 
 <!-- COMBINED TWEETER FEED -->
 <div class="feed_container">
@@ -125,6 +128,28 @@
 	?>
 </div>
 
+<div class="suggestion_container">
+	<h3> We think you'd love these Tweeters </h3>
+	<h4> Follow them here! </h4>
+	<div class = "suggestion_box">
+		<?php
+			$suggestion_array = suggestion($pdo, $_SESSION['user_id']);
+			foreach ($suggestion_array as $key => $value) {
+		?>
+			<div class="suggestion">
+				<?php echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'>" . $value['username'] . "</a>" . 
+					"<button type='submit' 
+						name='follow_button' 
+						onclick='follow_alert(" . $_SESSION['user_id'] . ", " . $value['user_id'] . ")';> 
+						Follow 
+					</button>"
+				?>
+			</div>
+		<?php
+			};
+		?>
+	</div>
+</div>
 
 	
 </body>

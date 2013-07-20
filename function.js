@@ -26,7 +26,7 @@ function follow_alert(user_id, following_id) {
 	var ajax = ajaxRequest();
 	ajax.onreadystatechange = function() {
 		if (ajax.readyState === 4) {
-			alert(ajax.responseText);
+			window.location.reload(true);
 		};
 	};
 	ajax.open('GET', 'function.php?function=follow&user_id='+user_id+'&following_id='+following_id, true);
@@ -38,7 +38,7 @@ function unfollow_alert(user_id, following_id) {
 	var ajax = ajaxRequest();
 	ajax.onreadystatechange = function() {
 		if (ajax.readyState === 4) {
-			alert(ajax.responseText);
+			window.location.reload(true);
 		}
 	}
 

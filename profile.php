@@ -46,7 +46,7 @@
 <!-- SEARCH BAR -->
 <div class="search">
 	<form action="others_profile.php" method="get" >
-		Search for someone! <br>
+		Search for people to Follow! <br>
 		<input type="text" name="query">
 		<input type="submit" value="Search!">
 	</form>

@@ -96,8 +96,8 @@
 	}
 
 
-	function show_tweets($pdo, $user_id, $others) {
-		/* Checking if to include tweets from people you follow */
+	function find_followers($pdo, $user_id, $others) {
+		/* Checking if to find user_ids from people you follow */
 		if ($others) {
 			/* Find who you are following first */
 			$find_following_stmt = "SELECT following_id FROM followers WHERE user_id = :user_id";
@@ -114,15 +114,18 @@
 			/*add your own tweets */
 			array_push($following_array, $user_id);
 
-
 		} else {
 			/* Define array containing just user_id to display only his/her tweets */
 			$following_array = array($user_id);
-		}
+		};
 
+		return $following_array;
+	}
 
+	function show_tweets($pdo, $user_id, $others) {
 		/* Fetches tweets from defined users*/
 
+		$following_array = find_followers($pdo, $user_id, $others);
 		/* LEARNING LESSON : When preparing statements and bindParaming, you must have a :value or ? for EACH parameter you want to bind! You can't just bind an array into one :value or ?
 
 		Thus, I used a str_repeater to generate the necessary ? and then you can just directly execute($array) which will fill in the ?. Note, I think the $array has to be simple numeric */
@@ -218,6 +221,7 @@
 			echo "Error: " . $e->getMessage();
 		}
 
+		/* Unfollow */
 		$unfollow_stmt = "DELETE FROM followers WHERE user_id = :user_id AND following_id = :following_id";
 		$unfollow = $pdo->prepare($unfollow_stmt);
 		$unfollow_result = $unfollow->execute(array(
@@ -248,8 +252,7 @@
 		}
 	}
 
-
-	/* Determines whether to call follow or unfollow alert function */
+	/* Determines whether to call follow_alert() or unfollow_alert()function */
 	function det_follow_alert($det_button_result) {
 		if ($det_button_result === 'Follow') {
 			return 'follow_alert';
@@ -257,4 +260,21 @@
 			return 'unfollow_alert';
 		}
 	}
+
+
+	/* Function for suggesting people to follow */
+	function suggestion($pdo, $user_id) {
+		$following_array = find_followers($pdo, $user_id, true);
+		$suggestion_stmt = "SELECT MAX(id) as max_id, user_id, username FROM tweets WHERE NOT user_id IN (" . str_repeat('?,' , count($following_array) - 1) . "?) GROUP BY user_id ORDER BY max_id DESC LIMIT 3";
+		$suggestion = $pdo->prepare($suggestion_stmt);
+		$suggestion_result = $suggestion->execute($following_array);
+
+		if(!$suggestion_result) {
+			echo "We could not find any suggestions for you! " . $pdo->error;
+		} else {
+			$suggestion_array = $suggestion->fetchAll();
+			return $suggestion_array;
+		}
+	}
+
 ?>

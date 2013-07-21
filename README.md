@@ -3,7 +3,7 @@ tweeter
 
 This is my 2nd PHP/MySQL project : constructing a twitter clone from scratch.
 
-/Structure/
+
     /Pages/
     Login_page.php : where you begin for registration/login
     main_page.php : after login/reg it takes you here

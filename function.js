@@ -1,3 +1,15 @@
+$(document).ready(function(){
+	$('.autosuggest').keyup(function(){
+		var search_term = $(this).val();
+		$.post('function.php', {search_term:search_term}, function(data) {
+			$('.result').html(data);
+
+		});
+	});
+});
+
+
+
 
 function ajaxRequest() {
 	var ajaxRequest;
@@ -44,4 +56,5 @@ function unfollow_alert(user_id, following_id) {
 
 	ajax.open('GET', 'function.php?function=unfollow&user_id='+user_id+'&following_id='+following_id, true);
 	ajax.send(null);
-}
+};
+

@@ -21,6 +21,14 @@
 	Username: <input type = "text" name="username"><br>
 	Password: <input type = "password" name="password"><br>
 	Email: <input type = "text" name="email"><br>
+	Timezone: 
+	<select name="timezone">
+		<option value=""> -- Select -- </option>
+		<option value=""> Timezone 1 </option>
+		<option value=""> Timezone 2 </option>
+		<option value=""> Timezone 3 </option>
+		<option value=""> Timezone 4 </option>
+	</select> <br>
 	<input type="submit" value="Submit">
 	</form>
 </div>

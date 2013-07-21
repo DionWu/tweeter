@@ -1,5 +1,8 @@
 <?php
+	
+	include_once 'header.php';
 
+/* REGISTRATION/LOGINS */
 	function register($pdo) {
 		/* Define variables & escape */
 		$firstname = $_POST['firstname'];
@@ -42,7 +45,6 @@
 		};
 	}
 
-
 	function login($pdo) {
 		/* POST & assign variables form login page */
 		$input_username = $_POST['input_username'];
@@ -65,7 +67,12 @@
 			}
 		};
 	}
+/* END REGISTRATION/LOGINS END */
 
+
+
+
+/* ADD TWEET */
 	function add_tweet($pdo, $user_id, $username) {
 		/* Define variables */
 		$tweet = $_POST['tweet'];
@@ -95,7 +102,13 @@
 		
 	}
 
+/* END ADD TWEET END */
 
+
+
+
+
+/* FIND INFO */
 	function find_followers($pdo, $user_id, $others) {
 		/* Checking if to find user_ids from people you follow */
 		if ($others) {
@@ -122,6 +135,28 @@
 		return $following_array;
 	}
 
+	/* Used to fetch id to show_tweets of other users ONLY on their profile pages */
+	function fetch_others_user_id($pdo, $others_profile_username) {
+		$fetch_id_stmt = "SELECT id FROM login_info WHERE username=:username";
+		$fetch_id = $pdo->prepare($fetch_id_stmt);
+		$fetch_id->bindParam(':username', $others_profile_username);
+		$fetch_id_result = $fetch_id->execute();
+
+		if (!$fetch_id_result) {
+			printf("Could not fetch id! <br> %s", $pdo->error);
+		} else {
+			$fetch_id_array = $fetch_id->fetch(PDO::FETCH_ASSOC);
+			return $fetch_id_array;
+		};
+	}
+
+/* END FIND INFO END */
+
+
+
+
+
+/* SHOW TWEETS */
 	function show_tweets($pdo, $user_id, $others) {
 		/* Fetches tweets from defined users*/
 
@@ -143,21 +178,13 @@
 		};
 	}
 
+/* END SHOW TWEETS */
 
-	/* Used to fetch id to show_tweets of other users ONLY on their profile pages */
-	function fetch_others_user_id($pdo, $others_profile_username) {
-		$fetch_id_stmt = "SELECT id FROM login_info WHERE username=:username";
-		$fetch_id = $pdo->prepare($fetch_id_stmt);
-		$fetch_id->bindParam(':username', $others_profile_username);
-		$fetch_id_result = $fetch_id->execute();
 
-		if (!$fetch_id_result) {
-			printf("Could not fetch id! <br> %s", $pdo->error);
-		} else {
-			$fetch_id_array = $fetch_id->fetch(PDO::FETCH_ASSOC);
-			return $fetch_id_array;
-		};
-	}
+
+
+
+/* FOLLOW _ UNFOLLOW */
 
 	/* Determine whether to display a follow/unfollow button or none at all in the case of your own tweet */
 	function det_follow_button($pdo, $user_id, $following_id) {
@@ -184,7 +211,6 @@
 		}
 	}
 
-
 	function follow($user_id, $following_id) {
 		/* Start new PDO instance */
 		/* LEARNING LESSON :  "You can’t pass a resource, like a PDO instance, to a JavaScript function. It doesn’t exist by the time the HTML is rendered. You’ll need to create the PDO instance in the PHP script your JavaScript function calls." */
@@ -210,7 +236,6 @@
 			echo "You successfully followed!";
 		};
 	}
-
 
 	function unfollow($user_id, $following_id){
 		/* intialize PDO */
@@ -260,7 +285,14 @@
 			return 'unfollow_alert';
 		}
 	}
+/*END FOLLOW _ UNFOLLOW END*/
 
+
+
+
+
+
+/* SUGGESTIONS */
 
 	/* Function for suggesting people to follow */
 	function suggestion($pdo, $user_id) {
@@ -276,5 +308,44 @@
 			return $suggestion_array;
 		}
 	}
+/* END SUGGESTIONS END */
 
+
+
+
+
+
+/* SEARCHING */
+
+	/* Live searching recommendations */
+	if (isset($_POST['search_term']) && !empty($_POST['search_term'])) {
+		$search_term = $_POST['search_term'];
+
+		/* IF YOU EVER WANT TO BINDPARAM WILDCARD TO VARIABLE 'CONCAT()' IN QUERY! */
+		$search_stmt = "SELECT username FROM login_info WHERE username LIKE CONCAT(:search_term, '%')";
+		$search = $pdo->prepare($search_stmt);
+		$search->bindParam(':search_term', $search_term);
+		$search_result = $search->execute();
+
+		while( $row = $search->fetch(PDO::FETCH_ASSOC) ) {
+			echo "<a href='others_profile.php?query=" . $row['username'] . "'><li>" . $row['username'] . "</li></a>";
+		}
+	}
+
+	/* Search for results from database */
+	function search($pdo, $query) {
+		$search_stmt = "SELECT username, id FROM login_info WHERE username = :username";
+		$search = $pdo->prepare($search_stmt);
+		$search->bindParam(':username', $query);
+		$search_result = $search->execute();
+		$search_array = $search->fetchAll();
+
+		/* Check if search query doesnt show any results */
+		if(empty($search_array)) {
+			echo "Sorry but there doesn't seem to be anyone with that username. Did you mean any of these?";
+		} else {
+			return $search_array;
+		}
+	}
+/* END SEARCHING END */
 ?>

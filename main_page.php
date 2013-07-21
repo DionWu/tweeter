@@ -1,6 +1,7 @@
 <html>
 <head>
-	<script type="text/javascript" src="function.js"> </script>
+	<link rel="stylesheet" type="text/css"  href="tweeter.css" />
+
 </head>
 <body>
 
@@ -66,20 +67,29 @@
 
 
 
+
+
+
+
 <!-- SEARCH BAR -->
 <div class="search">
-	<form action="others_profile.php" method="get" >
+	<form  action="query.php" method="get" >
 		Search for people to Follow! <br>
-		<input type="text" name="query">
+		<input class = "autosuggest" type="text" name="query">
 		<input type="submit" value="Search!">
 	</form>
+	<div class="dropdown">
+		<ul class="result">		</ul>
+	</div>
 </div>
 
 
-<!-- Suggest Followers box -->
-<div class="follower_suggestions">
 
-</div>
+
+
+
+
+
 
 <!-- COMBINED TWEETER FEED -->
 <div class="feed_container">
@@ -128,6 +138,10 @@
 	?>
 </div>
 
+
+
+
+<!-- Suggest Followers box -->
 <div class="suggestion_container">
 	<h3> We think you'd love these Tweeters </h3>
 	<h4> Follow them here! </h4>
@@ -152,6 +166,9 @@
 </div>
 
 	
+	<script type="text/javascript" src="../jquery.js"> </script>
+	<script type="text/javascript" src="function.js"> </script>
+
 </body>
 </html>
 

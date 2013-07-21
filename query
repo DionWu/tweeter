@@ -1,9 +1,9 @@
 <html>
 <head>
-	<script type="text/javascript" src="function.js"> </script>
+	<link rel="stylesheet" type="text/css"  href="tweeter.css" />
+
 </head>
 <body>
-
 
 <?php
 	session_start();
@@ -11,10 +11,12 @@
 	include_once 'function.php';
 ?>
 
+
+
 <div class="navbar">
 	<ul>
-		<li><a href="main_page.php"> Feed </a></li>
-		<li><a href="#"> <?php echo $_SESSION['username'] ?> </a></li>
+		<li><a href="#"> Feed </a></li>
+		<li><a href="profile.php"> <?php echo $_SESSION['username'] ?> </a></li>
 		<li> 
 			<div class="logout_button">
 				<form action="login_page.php">
@@ -24,6 +26,7 @@
 		</li>
 	</ul>
 </div>
+
 
 
 <!-- ADD TWEET -->
@@ -42,12 +45,11 @@
 
 
 
-
 <!-- SEARCH BAR -->
 <div class="search">
-	<form  action="query.php" method="get" >
+	<form  action="others_profile.php" method="get" >
 		Search for people to Follow! <br>
-		<input class = "autosuggest" type="text" name="query">
+		<input class = "autosuggest" type="text" >
 		<input type="submit" value="Search!">
 	</form>
 	<div class="dropdown">
@@ -57,44 +59,14 @@
 
 
 
-<h1> Profile Page of @<?php echo $_SESSION['username']  ?> </h1>
+
+<h1> Your search results! </h1>
 
 
 
 
-<!-- PERSONAL TWEETER FEED -->
-<div class="feed_container">
-	<h3> Your Tweeter Feed! </h3>
-	<?php
-		$all_tweets = show_tweets($pdo, $_SESSION['user_id'], false);
-		if (count($all_tweets)) {
-			foreach($all_tweets as $key => $value) {
-	?>
-	<div class="tweet">
-		<?php
-				/* Determine which type of profile page to direct user to */
-				if ($value['username'] === $_SESSION['username']) {
-						$url = 'profile.php';
-					} else {
-						$url = 'others_profile.php';
-					};
-				/* Actual tweet embodied here */	
-				echo $value['tweet'] . "<br> 
-				Written By: <a href=" .$url. "?profile_username=". $value['username'] .">" .
-				$value['username'] . 
-				"</a> on " . $value['time'] . "<br>";
-		?>
-	</div>
-	<?php
-			};
-		} else {
-			echo "You haven't posted anything yet!";
-		};
-	?>
-</div>
 
-
-
+<!-- Suggest Followers box -->
 <div class="suggestion_container">
 	<h3> We think you'd love these Tweeters </h3>
 	<h4> Follow them here! </h4>
@@ -118,7 +90,13 @@
 	</div>
 </div>
 
-
+	
+	<script type="text/javascript" src="../jquery.js"> </script>
+	<script type="text/javascript" src="function.js"> </script>
 
 </body>
 </html>
+
+
+
+

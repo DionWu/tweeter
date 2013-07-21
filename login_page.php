@@ -23,16 +23,19 @@
 	Email: <input type = "text" name="email"><br>
 	Timezone: 
 	<select name="timezone">
+		<?php 
+			$tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
+		?>
 		<option value=""> -- Select -- </option>
-		<option value=""> Timezone 1 </option>
-		<option value=""> Timezone 2 </option>
-		<option value=""> Timezone 3 </option>
-		<option value=""> Timezone 4 </option>
+		<?php
+			foreach ($tzlist as $timezone) {
+				echo "<option value='" . $timezone . "'>" . $timezone . "</option>";
+			}
+		?>
 	</select> <br>
 	<input type="submit" value="Submit">
 	</form>
 </div>
-
 
 </body>
 </html>

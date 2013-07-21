@@ -5,6 +5,7 @@ lastname varchar(255) not null,
 username varchar(13) not null UNIQUE,
 password nvarchar(128) not null,
 email varchar(255) not null UNIQUE, 
+timezone varchar(255) not null,
 PRIMARY KEY (id)
 );
 
@@ -13,7 +14,7 @@ id int unsigned not null AUTO_INCREMENT PRIMARY KEY,
 user_id int NOT NULL, 
 username varchar(255) NOT NULL,
 tweet varchar(140),
-time varchar(255) NOT NULL,
+time DATETIME NOT NULL,
 unixtime int unsigned NOT NULL
 );
 

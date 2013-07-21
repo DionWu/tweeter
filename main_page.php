@@ -5,7 +5,6 @@
 </head>
 <body>
 
-
 <?php
 	session_start();
 	include_once 'header.php';
@@ -16,10 +15,12 @@
 		login($pdo);
 		$_SESSION['user_id'] = $_SESSION['identify']['user_id'];
 		$_SESSION['username'] = $_SESSION['identify']['username'];
+		$_SESSION['timezone'] = $_SESSION['identify']['timezone'];
 	} else if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email'])) {
 		register($pdo);
 		$_SESSION['user_id'] = $_SESSION['identify']['user_id'];
 		$_SESSION['username'] = $_SESSION['identify']['username'];
+		$_SESSION['timezone'] = $_SESSION['identify']['timezone'];
 	};
 ?>
 
@@ -42,8 +43,24 @@
 
 
 
+<!-- SEARCH BAR -->
+<div class="search_container">
+	<form  action="query.php" method="get" >
+		Search for people to Follow! <br>
+		<input class = "autosuggest" type="text" name="query">
+		<input type="submit" value="Search!">
+	</form>
+	<div class="dropdown">
+		<ul class="result">		</ul>
+	</div>
+</div>
+
+
+
+
+
 <div class="hello">
-	<p> Welcome back to tweeter<p>
+	<h2> Welcome back to tweeter</h2>
 </div>
 
 
@@ -67,26 +84,28 @@
 
 
 
-
-
-
-
-<!-- SEARCH BAR -->
-<div class="search">
-	<form  action="query.php" method="get" >
-		Search for people to Follow! <br>
-		<input class = "autosuggest" type="text" name="query">
-		<input type="submit" value="Search!">
-	</form>
-	<div class="dropdown">
-		<ul class="result">		</ul>
+<!-- Suggest Followers box -->
+<div class="suggestion_container">
+	We think you'd love these Tweeters 
+	<div class = "suggestion_box">
+		<?php
+			$suggestion_array = suggestion($pdo, $_SESSION['user_id']);
+			foreach ($suggestion_array as $key => $value) {
+		?>
+			<div class="suggestion">
+				<?php echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'class='suggestion_link'>" . $value['username'] . "</a>" . 
+					"<button type='submit' 
+						name='follow_button' 
+						onclick='follow_alert(" . $_SESSION['user_id'] . ", " . $value['user_id'] . ")';> 
+						Follow 
+					</button>"
+				?>
+			</div>
+		<?php
+			};
+		?>
 	</div>
 </div>
-
-
-
-
-
 
 
 
@@ -108,11 +127,17 @@
 						$url = 'others_profile.php';
 					};
 
-				/* Actual tweet embodied here */	
-				echo $value['tweet'] . "<br> 
+				/* Convert to users timezone */
+				$users_timezone = new DateTimeZone($_SESSION['timezone']);
+				$date = new DateTime($value['time']);
+				$date->setTimeZone($users_timezone);
+				$new_date = $date->format('M j, o g:i a e');
+
+				/* Actual tweet embodied here */
+				echo "<div class='tweet_text'>" . $value['tweet'] . "</div><div class='tweet_info'>
 				Written By: <a href=" .$url. "?profile_username=". $value['username'] .">" .
 				$value['username'] . 
-				"</a> on " . $value['time'] . "<br>";
+				"</a> on " . $new_date . "</div>";
 		?>
 
 		<div class="follow_unfollow_button">
@@ -139,31 +164,6 @@
 </div>
 
 
-
-
-<!-- Suggest Followers box -->
-<div class="suggestion_container">
-	<h3> We think you'd love these Tweeters </h3>
-	<h4> Follow them here! </h4>
-	<div class = "suggestion_box">
-		<?php
-			$suggestion_array = suggestion($pdo, $_SESSION['user_id']);
-			foreach ($suggestion_array as $key => $value) {
-		?>
-			<div class="suggestion">
-				<?php echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'>" . $value['username'] . "</a>" . 
-					"<button type='submit' 
-						name='follow_button' 
-						onclick='follow_alert(" . $_SESSION['user_id'] . ", " . $value['user_id'] . ")';> 
-						Follow 
-					</button>"
-				?>
-			</div>
-		<?php
-			};
-		?>
-	</div>
-</div>
 
 	
 	<script type="text/javascript" src="../jquery.js"> </script>

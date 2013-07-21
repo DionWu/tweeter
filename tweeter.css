@@ -2,6 +2,51 @@ body{
 	
 }
 
+/* navbar */
+.navbar {
+	display: inline-block;
+	margin-top: 16px;
+}
+
+.navbar ul {
+	padding-left: -5px;
+	margin: 0;
+}
+
+.navbar .logout_button {
+	margin-bottom: -25%;
+}
+
+.navbar li {
+	display: inline-block;
+	list-style: none;
+	margin: 0 20px 0 0;
+}
+
+.navbar li a {
+	text-decoration: none;
+	font-size: 1.25em;
+}
+
+
+
+/* hello */
+.hello h2 {
+	margin-left: 40px;
+	margin-top: 40px;
+}
+
+
+
+
+/* search */
+.search_container {
+	display: inline-block;
+	float:left:;
+	margin-left: 230px;
+}
+
+/* live search */
 .autosuggest, .dropdown, .result {
 	margin:0;
 	padding:0;
@@ -32,4 +77,98 @@ body{
 .result li:hover {
 	background-color: grey;
 	color: white;	
+}
+
+
+
+
+/* Post Tweets */
+.post_tweet {
+	display: block;
+	float:left;
+	margin: 40px 20px 0 40px;
+}
+
+
+
+/* Suggestion container */
+.suggestion_container {
+	display:block;
+	float:left;
+	clear:left;
+	border: 1px solid #000;
+	margin: 30px 40px;
+	padding: 10px;
+}
+
+.suggestion_box {
+	margin: 10px;
+}
+
+.suggestion {
+	margin-top:15px;
+	margin-bottom:15px;
+	border: 1px dashed blue;
+}
+
+.suggestion_link {
+	text-decoration: none;
+	margin-left:10px;
+}
+
+.suggestion button {
+	margin-left:10px;
+}
+
+
+/* Tweeter feed */
+.feed_container{
+	display: inline-block;
+	clear:left;
+	margin: 40px;
+	border: 1px dashed #000;
+	width: 500px;
+}
+
+.feed_container h3 {
+	margin-top: -5px ;
+	padding: 10px;
+}
+
+.feed_container .tweet {
+	display:block;
+	border: 1px solid #000;
+	margin: 10px;
+	padding: 10px;
+}
+
+.tweet .tweet_text{
+	display:block;
+	width:100px;
+}
+
+
+/* Search Query Results page */
+.search_results_container {
+	display: inline-block;
+	clear:left;
+	margin: 40px;
+	border: 1px dashed #000;
+	width: 500px;
+}
+
+.search_results_container h3 {
+	margin-top: -5px ;
+	padding: 10px;
+}
+
+.search_result {
+	display:block;
+	border: 1px solid #000;
+	margin: 10px;
+	padding: 10px;
+}
+
+.search_result a {
+	text-decoration: none;
 }

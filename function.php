@@ -14,16 +14,18 @@
 		$password = crypt($unhashed_password);
 
 		$email = $_POST['email'];
+		$timezone = $_POST['timezone'];
 
 		/* Insert variables into SQL table */
-		$reg_insert_stmt = "INSERT INTO `login_info` (`firstname`, `lastname`, `username`, `password`, `email`) VALUES (:firstname, :lastname, :username, :password, :email)";
+		$reg_insert_stmt = "INSERT INTO `login_info` (`firstname`, `lastname`, `username`, `password`, `email`, `timezone`) VALUES (:firstname, :lastname, :username, :password, :email, :timezone)";
 		$reg_insert = $pdo->prepare($reg_insert_stmt);
 		$reg_insert_result = $reg_insert->execute(array(
 				':firstname' => $firstname,
 				':lastname' => $lastname,
 				':username' => $username,
 				':password' => $password,
-				':email' => $email
+				':email' => $email,
+				':timezone' => $timezone
 		));
 
 		/* Check if inserted correctly & if not, output error */
@@ -31,7 +33,7 @@
 			echo $pdo->errorInfo();
 			exit();
 		} else {
-			$fetch_user_id_stmt = "SELECT id, username FROM login_info WHERE username = :username";
+			$fetch_user_id_stmt = "SELECT id, username, timezone FROM login_info WHERE username = :username";
 			$fetch_user_id = $pdo->prepare($fetch_user_id_stmt);
 			$fetch_user_id->bindParam(':username', $username);
 			$fetch_user_id->execute();
@@ -39,7 +41,8 @@
 			while ($row = $fetch_user_id->fetch(PDO::FETCH_ASSOC)) {
 				$_SESSION['user_id'] = $row['id'];
 				$_SESSION['username'] = $row['username'];
-				$_SESSION['identify'] = array('user_id' => $_SESSION['user_id'], 'username' => $_SESSION['username']);
+				$_SESSION['timezone'] = $row['timezone'];
+				$_SESSION['identify'] = array('user_id' => $_SESSION['user_id'], 'username' => $_SESSION['username'], 'timezone'=>$_SESSION['timezone']);
 				return $_SESSION['identify'];
 			};
 		};
@@ -51,7 +54,7 @@
 		$input_password = $_POST['input_password'];
 
 		/* Fetch password to compare to user inputted password */
-		$fetch_password_stmt = "SELECT `username`, `password`, `id` FROM `login_info` WHERE `username`= :username";
+		$fetch_password_stmt = "SELECT `username`, `password`, `id`, `timezone` FROM `login_info` WHERE `username`= :username";
 		$fetch_password = $pdo->prepare($fetch_password_stmt);
 		$fetch_password->execute(array(':username'=> $input_username));
 
@@ -62,7 +65,8 @@
 			} else {
 				$_SESSION['user_id'] = $row['id'];
 				$_SESSION['username'] = $row['username'];
-				$_SESSION['identify'] = array('user_id' => $_SESSION['user_id'], 'username' => $_SESSION['username']);
+				$_SESSION['timezone'] = $row['timezone'];
+				$_SESSION['identify'] = array('user_id' => $_SESSION['user_id'], 'username' => $_SESSION['username'], 'timezone' => $_SESSION['timezone']);
 				return $_SESSION['identify'];
 			}
 		};
@@ -76,7 +80,7 @@
 	function add_tweet($pdo, $user_id, $username) {
 		/* Define variables */
 		$tweet = $_POST['tweet'];
-		$time = date('M j, o g:i a e');
+		$time = date('Y-m-d H:i:s');
 		$unixtime = time();
 
 		/* Add tweet to table `tweets` */

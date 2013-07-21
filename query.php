@@ -29,6 +29,22 @@
 
 
 
+<!-- SEARCH BAR -->
+<div class="search_container">
+	<form  action="query.php" method="get" >
+		Search for people to Follow! <br>
+		<input class = "autosuggest" type="text" name="query">
+		<input type="submit" value="Search!">
+	</form>
+	<div class="dropdown">
+		<ul class="result">		</ul>
+	</div>
+</div>
+
+<div class="hello">
+	<h2> Search Results </h2>
+</div>
+
 <!-- ADD TWEET -->
 <?php
 	if (isset($_POST['tweet'])) {
@@ -44,29 +60,39 @@
 </div>
 
 
-
-<!-- SEARCH BAR -->
-<div class="search">
-	<form  action="query.php" method="get" >
-		Search for people to Follow! <br>
-		<input class = "autosuggest" type="text" name="query">
-		<input type="submit" value="Search!">
-	</form>
-	<div class="dropdown">
-		<ul class="result">		</ul>
+<!-- Suggest Followers box -->
+<div class="suggestion_container">
+	We think you'd love these Tweeters 
+	<div class = "suggestion_box">
+		<?php
+			$suggestion_array = suggestion($pdo, $_SESSION['user_id']);
+			foreach ($suggestion_array as $key => $value) {
+		?>
+			<div class="suggestion">
+				<?php echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'class='suggestion_link'>" . $value['username'] . "</a>" . 
+					"<button type='submit' 
+						name='follow_button' 
+						onclick='follow_alert(" . $_SESSION['user_id'] . ", " . $value['user_id'] . ")';> 
+						Follow 
+					</button>"
+				?>
+			</div>
+		<?php
+			};
+		?>
 	</div>
 </div>
 
 
 
 <div class="search_results_container">
-	<h1> Your search results! </h1>
+	<h3> See what these people have to tweet! </h3>
 	<?php 
 	if (isset($_GET['query'])) {
 		$search_results = search($pdo, $_GET['query']);
 		foreach($search_results as $key => $value) {
 	?>
-			<div class="follow_unfollow_button">
+			<div class="search_result">
 			<!-- Call on det_follow_button() to find value for button -->
 			<?php
 				$det_button_result = det_follow_button($pdo, $_SESSION['user_id'], $value['id']);
@@ -75,7 +101,7 @@
 
 				/* Show a Follow/Unfolow button */
 				if ($det_button_result) {
-					echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'>" . 
+					echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'class='search_text'>" . 
 						$value['username'] . "</a> <br>" .
 						"<button type='submit' 
 							name='follow_button' 

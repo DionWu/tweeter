@@ -93,7 +93,7 @@
 			foreach ($suggestion_array as $key => $value) {
 		?>
 			<div class="suggestion">
-				<?php echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'class='suggestion_link'>" . $value['username'] . "</a>" . 
+				<?php echo "<a href='others_profile.php?query=" . $value['username'] . "'class='suggestion_link'>" . $value['username'] . "</a>" . 
 					"<button type='submit' 
 						name='follow_button' 
 						onclick='follow_alert(" . $_SESSION['user_id'] . ", " . $value['user_id'] . ")';> 
@@ -135,7 +135,7 @@
 
 				/* Actual tweet embodied here */
 				echo "<div class='tweet_text'>" . $value['tweet'] . "</div><div class='tweet_info'>
-				Written By: <a href=" .$url. "?profile_username=". $value['username'] .">" .
+				Written By: <a href=" .$url. "?query=". $value['username'] .">" .
 				$value['username'] . 
 				"</a> on " . $new_date . "</div>";
 		?>

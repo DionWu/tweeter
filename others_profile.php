@@ -11,14 +11,14 @@
 	include_once 'function.php';
 
 	/* Define other username variable & id */
-	if (isset($_GET['query'])) {
-		$others_profile_username = $_GET['query'];
-	} else if (isset($_GET['profile_username'])) {
-		$others_profile_username = $_GET['profile_username'];
+	$others_username = null;
+	if (!isset($_SESSION['other_username'])) {
+		$_SESSION['other_username'] = $_GET['query'];
+	} else {
+		$others_username = $_SESSION['other_username'];
 	}
-
-	$fetch_id_result = fetch_others_user_id($pdo, $others_profile_username);
-	$others_profile_id = $fetch_id_result['id'];
+	$fetch_id_result = fetch_others_user_id($pdo, $others_username);
+	$others_id = $fetch_id_result['id'];
 
 ?>
 
@@ -51,15 +51,15 @@
 
 
 <div class="hello">
-	<h2> Profile Page of @<?php echo $others_profile_username ?> 
+	<h2> Profile Page of @<?php echo $others_username ?> 
 	<?php
-		$det_button_result = det_follow_button($pdo, $_SESSION['user_id'], $others_profile_id);
+		$det_button_result = det_follow_button($pdo, $_SESSION['user_id'], $others_id);
 		/* call on det_follow_alert() to determine what function to call */
 		$alert_type = det_follow_alert($det_button_result);
 
 		/* Show a Follow/Unfolow button */
 		if ($det_button_result) {
-			echo "<button type='submit' name='follow_button' onclick='" . $alert_type ."(" . $_SESSION['user_id'] . ", " . $others_profile_id . ")'; >" . $det_button_result . "</button>";
+			echo "<button type='submit' name='follow_button' onclick='" . $alert_type ."(" . $_SESSION['user_id'] . ", " . $others_id . ")'; >" . $det_button_result . "</button>";
 		}
 	?>
 </h2>
@@ -94,7 +94,7 @@
 			foreach ($suggestion_array as $key => $value) {
 		?>
 			<div class="suggestion">
-				<?php echo "<a href='others_profile.php?profile_username=" . $value['username'] . "'class='suggestion_link'>" . $value['username'] . "</a>" . 
+				<?php echo "<a href='others_profile.php?query=" . $value['username'] . "'class='suggestion_link'>" . $value['username'] . "</a>" . 
 					"<button type='submit' 
 						name='follow_button' 
 						onclick='follow_alert(" . $_SESSION['user_id'] . ", " . $value['user_id'] . ")';> 
@@ -113,9 +113,9 @@
 
 <!-- OTHERS TWEETER FEED --> 
 <div class="feed_container">
-	<h3> Tweeter Feed of @<?php echo $others_profile_username ?> </h3>
+	<h3> Tweeter Feed of @<?php echo $others_username ?> </h3>
 	<?php
-		$all_tweets = show_tweets($pdo, $others_profile_id, false);
+		$all_tweets = show_tweets($pdo, $others_id, false);
 		if (count($all_tweets)) {
 			foreach($all_tweets as $key => $value) {
 	?>
@@ -135,7 +135,7 @@
 
 				/* Actual tweet embodied here */	
 				echo $value['tweet'] . "<br> 
-				Written By: <a href=" .$url. "?profile_username=". $value['username'] .">" .
+				Written By: <a href=" .$url. "?query=". $value['username'] .">" .
 				$value['username'] . 
 				"</a> on " . $new_date . "<br>";
 		?>
